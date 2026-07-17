@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, send_from_directory
 from PIL import Image, ImageOps, UnidentifiedImageError
 import torch
 from transformers import AutoImageProcessor, AutoModelForImageClassification
+from huggingface_hub import hf_hub_download
 
 MODEL_DIR = Path(__file__).resolve().parent / "real_fake_face_classifier"
 ALLOWED_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png"}
@@ -182,6 +183,11 @@ def index():
 
 
 if __name__ == "__main__":
+     model_path = hf_hub_download(
+        repo_id="purnakunche/ImeDet",
+        filename="model.safetensors"
+    )
+
     app.run(
         debug=os.environ.get("FLASK_DEBUG") == "1",
         host="0.0.0.0",
