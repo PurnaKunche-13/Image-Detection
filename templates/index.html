@@ -1,0 +1,79 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Real vs Fake Face Detection</title>
+    <link rel="stylesheet" href="{{ url_for('stylesheet') }}">
+</head>
+<body>
+    <main>
+        <header class="app-header">
+            <h1 class="app-title">Real vs Fake Face Detection</h1>
+            <div class="app-subtitle">
+                Upload a JPG or PNG face image and the local pretrained model will classify it as REAL or FAKE.
+            </div>
+        </header>
+
+        <section class="layout">
+            <div>
+                <form class="panel" method="post" enctype="multipart/form-data">
+                    <div class="panel-title">Image input</div>
+                    <p class="panel-copy">Choose a clear, front-facing image for the most stable result.</p>
+                    <input class="upload-control" name="image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+                    <button class="button" type="submit">Analyze image</button>
+                </form>
+
+                <div class="status">
+                    <h2 class="panel-title">Model status</h2>
+                    {% if model_loaded %}
+                        <div class="status-good">ACTIVE</div>
+                    {% else %}
+                        <div class="error-state">{{ model_error }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                {% if error %}
+                    <div class="error-state">{{ error }}</div>
+                {% elif result %}
+                    <div class="result-grid">
+                        <div class="preview-card">
+                            <img class="preview-image" src="{{ result.preview_data_uri }}" alt="Uploaded face preview">
+                            <p class="muted">Original size: {{ result.width }} x {{ result.height }}px</p>
+                        </div>
+                        <div>
+                            <div class="result-card">
+                                <span class="prediction-label {{ result.label_class }}">{{ result.label }}</span>
+                                <div class="confidence-number">{{ result.confidence_percent }}</div>
+                                <div class="muted">Prediction confidence</div>
+                                <progress max="1" value="{{ result.confidence }}"></progress>
+                            </div>
+                            <div class="probabilities">
+                                <div class="metric">
+                                    <div class="metric-label">FAKE</div>
+                                    <div class="metric-value">{{ result.fake_probability }}</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">REAL</div>
+                                    <div class="metric-value">{{ result.real_probability }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        Upload an image to see the preview, prediction, and confidence score here.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <footer>
+            
+        </footer>
+    </main>
+</body>
+</html>
+
