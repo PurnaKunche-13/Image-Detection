@@ -1,0 +1,6 @@
+﻿Flask>=3.0,<4
+gunicorn>=22,<24
+Pillow>=10,<13
+torch>=2.5,<3
+transformers>=4.45,<5
+safetensors>=0.4,<1
